@@ -47,13 +47,13 @@ jobs:
           echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
       - name: Rename JAR files
         run: |
-          short_sha=${{ steps.timestamp.outputs.short_sha }}
-          for jar in target/*.jar; do
+          short_sha=${{ env.short_sha }}
+          for jar in build/libs/*.jar; do  # Look in build/libs instead of target
               filename=$(basename -- "$jar")
               extension="${filename##*.}"
               name="${filename%.*}"
               new_filename="${name}-${short_sha}.${extension}"
-              mv "$jar" "target/$new_filename"
+              mv "$jar" "build/libs/$new_filename"  # Update the target directory here as well
           done
       - name: Upload plugin artifact
         uses: actions/upload-artifact@main
